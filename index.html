@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101126">
+<title>My AI — مساعدك الذكي</title>
+<style>
+:root{--bg:#0d1020;--panel:#151a30;--panel2:#1c2340;--text:#f4f5ff;--muted:#a6acc8;--accent:#8b7cff;--accent2:#38c6d9;--line:#2b3150}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#24204d 0,transparent 35%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;height:100vh;overflow:hidden}
+.app{display:flex;height:100vh}.sidebar{width:280px;background:#101429;border-left:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800}.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:white;font-weight:900}
+.newchat{border:1px solid #45406f;background:linear-gradient(120deg,#28234e,#1b3450);color:white;border-radius:13px;padding:13px;font-size:15px;cursor:pointer}
+.side-label{font-size:12px;color:var(--muted);margin-top:4px}.history{overflow:auto;display:flex;flex-direction:column;gap:6px}.history button{background:transparent;border:0;color:#d8dcf3;text-align:right;padding:10px;border-radius:9px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.history button:hover{background:var(--panel2)}
+.sidebar-foot{margin-top:auto;color:var(--muted);font-size:12px;line-height:1.7}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}.topbar{height:66px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px}.topbar strong{font-size:16px}.top-actions{display:flex;gap:8px}.top-actions button{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:8px 11px;cursor:pointer}
+.chat{flex:1;overflow:auto;padding:24px 16px 14px}.welcome{max-width:760px;margin:9vh auto 0;text-align:center}.welcome h1{font-size:clamp(28px,5vw,46px);margin:0 0 12px}.gradient{background:linear-gradient(90deg,#a89aff,#52d5e5);-webkit-background-clip:text;background-clip:text;color:transparent}.welcome p{color:var(--muted);font-size:16px}.suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:28px auto;max-width:650px}.suggestions button{background:#171d35;border:1px solid var(--line);color:#e8eaff;border-radius:14px;padding:14px;text-align:right;cursor:pointer}.suggestions button:hover{border-color:var(--accent)}
+.messages{max-width:850px;margin:0 auto;display:flex;flex-direction:column;gap:18px}.message{display:flex;gap:11px;align-items:flex-start;line-height:1.8}.avatar{width:32px;height:32px;flex:0 0 32px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));font-weight:800}.bubble{background:var(--panel);border:1px solid var(--line);padding:12px 15px;border-radius:15px;max-width:calc(100% - 44px);white-space:pre-wrap;overflow-wrap:anywhere}.user .avatar{background:#35415f}.user .bubble{background:#202746}
+.composer-wrap{padding:12px 16px 18px}.composer{max-width:850px;margin:auto;background:#171d35;border:1px solid #3a4165;border-radius:18px;padding:9px;display:flex;align-items:flex-end;gap:9px;box-shadow:0 12px 40px #0004}.composer textarea{flex:1;resize:none;max-height:160px;min-height:44px;border:0;outline:0;background:transparent;color:var(--text);font:inherit;padding:10px}.send{border:0;border-radius:13px;background:linear-gradient(135deg,var(--accent),#5b9ee9);color:white;padding:12px 17px;cursor:pointer;font-weight:700}.send:disabled{opacity:.5;cursor:default}.hint{text-align:center;color:#858cab;font-size:11px;margin-top:8px}
+body.light{--bg:#f4f5fb;--panel:#fff;--panel2:#edf0fb;--text:#20243a;--muted:#68708e;--line:#dce0ef;background:#f4f5fb}.light .sidebar{background:#eaedf8}.light .topbar{background:#ffffffaa}.light .suggestions button{background:#fff;color:#242943}.light .composer{background:#fff}.light .user .bubble{background:#e9edff}
+@media(max-width:700px){.sidebar{width:74px;padding:12px 8px;align-items:center}.brand span,.newchat span,.side-label,.history,.sidebar-foot{display:none}.newchat{width:48px;height:48px;padding:0;font-size:22px}.brand{justify-content:center}.topbar{padding:0 12px}.chat{padding:12px 10px}.welcome{margin-top:7vh}.suggestions{grid-template-columns:1fr}.composer-wrap{padding:8px}.top-actions button{padding:7px 9px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="logo">M</div><span>My AI</span></div>
+  <button class="newchat" id="newChat">＋ <span>محادثة جديدة</span></button>
+  <div class="side-label">المحادثات السابقة</div>
+  <div class="history" id="history"></div>
+  <div class="sidebar-foot">My AI<br>نسختك التجريبية الأولى<br>تُحفظ المحادثات على هذا الجهاز.</div>
+</aside>
+<main class="main">
+  <header class="topbar"><strong>مساعدك الذكي</strong><div class="top-actions"><button id="language">عربي</button><button id="theme" title="تغيير المظهر">☼</button></div></header>
+  <section class="chat" id="chat">
+    <div class="welcome" id="welcome">
+      <h1>مرحبا بك في <span class="gradient">My AI</span></h1>
+      <p>اسأل، تعلّم، اكتب، وبرمج… خلّينا نبدأوا!</p>
+      <div class="suggestions">
+        <button>فسّرلي درس بطريقة سهلة</button><button>عاونّي نحل تمرين خطوة بخطوة</button>
+        <button>اكتبلي كود Python</button><button>لخّصلي نص أو ملف</button>
+      </div>
+    </div>
+    <div class="messages" id="messages"></div>
+  </section>
+  <footer class="composer-wrap"><div class="composer"><textarea id="prompt" rows="1" placeholder="اكتب رسالتك هنا..."></textarea><button class="send" id="send">إرسال</button></div><div class="hint">My AI — واجهة تجريبية. يلزم ربط خدمة ذكاء اصطناعي لتوليد إجابات حقيقية.</div></footer>
+</main>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+let chats=JSON.parse(localStorage.getItem('myai_chats')||'[]'), current=null, lang='ar';
+function save(){localStorage.setItem('myai_chats',JSON.stringify(chats));renderHistory()}
+function renderHistory(){const h=$('#history');h.innerHTML='';chats.slice().reverse().forEach(c=>{let b=document.createElement('button');b.textContent=c.title||'محادثة جديدة';b.onclick=()=>openChat(c.id);h.appendChild(b)})}
+function newChat(){current={id:Date.now(),title:'محادثة جديدة',messages:[]};chats.push(current);save();renderMessages()}
+function openChat(id){current=chats.find(c=>c.id===id);renderMessages()}
+function renderMessages(){$('#welcome').style.display=current&&current.messages.length?'none':'block';const box=$('#messages');box.innerHTML='';if(!current)return;current.messages.forEach(m=>{let row=document.createElement('div');row.className='message '+(m.role==='user'?'user':'');let av=document.createElement('div');av.className='avatar';av.textContent=m.role==='user'?'أنت':'M';let bubble=document.createElement('div');bubble.className='bubble';bubble.textContent=m.content;row.append(av,bubble);box.appendChild(row)});$('#chat').scrollTop=$('#chat').scrollHeight}
+function addMessage(role,content){current.messages.push({role,content});if(current.title==='محادثة جديدة'&&role==='user')current.title=content.slice(0,28);save();renderMessages()}
+async function send(){let input=$('#prompt'),text=input.value.trim();if(!text)return;if(!current)newChat();input.value='';input.style.height='44px';addMessage('user',text);
+ // Demo response only: no AI service is connected yet.
+ addMessage('assistant','وصلتني رسالتك! واجهة My AI تخدم وتحفظ المحادثات، أمّا الذكاء الاصطناعي الحقيقي مازال يلزمو ربط خدمة API أو مزوّد مجاني. ما نحبّش نعطيك إجابة وهمية ونقولك إنها من AI.');}
+$('#send').onclick=send;$('#prompt').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});$('#prompt').addEventListener('input',e=>{e.target.style.height='44px';e.target.style.height=Math.min(e.target.scrollHeight,160)+'px'});
+$('#newChat').onclick=()=>{newChat();$('#prompt').focus()};document.querySelectorAll('.suggestions button').forEach(b=>b.onclick=()=>{$('#prompt').value=b.textContent;send()});
+$('#theme').onclick=()=>document.body.classList.toggle('light');$('#language').onclick=()=>{lang=lang==='ar'?'fr':'ar';$('#language').textContent=lang==='ar'?'عربي':'Français';document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';$('#prompt').placeholder=lang==='ar'?'اكتب رسالتك هنا...':'Écrivez votre message...'};
+renderHistory();if(chats.length)openChat(chats[chats.length-1].id);
+</script>
+</body></html>
